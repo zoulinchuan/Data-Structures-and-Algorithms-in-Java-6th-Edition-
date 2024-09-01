@@ -15,13 +15,17 @@ public class Main {
         arrayList.add(2);
         arrayList.add(3);
         arrayList.add(5);
-        
+
         arrayList.set(3, 4);
+
+        arrayList.add(1, 99);
 
         for (int i = 0; i < arrayList.size(); i++) {
             System.out.println(arrayList.get(i));
         }
 
+        System.out.println("indexOf: " + arrayList.indexOf(2));
+        System.out.println("indexOf: " + arrayList.indexOf(5));
     }
 }
 
@@ -64,7 +68,7 @@ class MyArrayList<E> implements List<E> {
 
     @Override
     public <T> T[] toArray(T[] a) {
-        return null;
+        return (T[]) array;
     }
 
     @Override
@@ -131,7 +135,15 @@ class MyArrayList<E> implements List<E> {
 
     @Override
     public void add(int index, E element) {
-
+        if (size == array.length) {
+            E[] bigger = (E[]) new Object[size + 1];
+            System.arraycopy(array, 0, bigger, 0, array.length);
+            array = bigger;
+        }
+        // 1,3,4,5,null,null -> 1,3,3,4,5,null
+        System.arraycopy(array, index, array, index + 1, array.length - (index + 1));
+        array[index] = element;
+        size++;
     }
 
     @Override
@@ -141,7 +153,12 @@ class MyArrayList<E> implements List<E> {
 
     @Override
     public int indexOf(Object o) {
-        return 0;
+        for (int i = 0; i < size; i++) {
+            if (array[i] != null && (array[i] == o || array[i].equals(o))) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
